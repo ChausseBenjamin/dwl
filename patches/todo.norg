@@ -1,0 +1,25 @@
+#title: list of patches
+#author: Benjamin Chausse
+#date: 2024-04-24
+
+* Implemented patches
+
+* Not implemented patches
+** Must Haves:
+*** {https://codeberg.org/dwl/dwl-patches/wiki/togglekblayoutandoptions}[kblayoutandoptions]
+*** {https://codeberg.org/dwl/dwl-patches/src/branch/main/alwayscenter}[alwayscenter]
+*** {https://codeberg.org/dwl/dwl-patches/wiki/movestack}[movestack]
+*** {https://codeberg.org/dwl/dwl-patches/wiki/bar}[bar]
+*** {https://codeberg.org/dwl/dwl-patches/wiki/vanitygaps}[vanitygaps]
+** Optional but nice-to-have:
+*** {https://codeberg.org/dwl/dwl-patches/wiki/hide_vacant_tags}[hide vacant tags]
+*** {https://codeberg.org/dwl/dwl-patches/wiki/right}[right]
+*** {https://codeberg.org/dwl/dwl-patches/wiki/relative-mouse-resize.-}[relative-mouse-resize]
+*** {https://codeberg.org/dwl/dwl-patches/wiki/unclutter}[unclutter]
+*** {https://codeberg.org/dwl/dwl-patches/wiki/en-keycodes}[en-keycodes]
+*** {caps}[en-keycodes]
+** Need to be written:
+*** flashfocus (remake {https://github.com/fennerm/flashfocus}[flashfocus] in dwl)
+*** rotatestack (remake {https://dwm.suckless.org/patches/rotatestack/}[rotatestack] in dwl)
+* Non patches needed for Wayland in general
+*** {https://codeberg.org/notchoc/dwlmsg}[dwlmsg]
