@@ -44,8 +44,7 @@ static int log_level = WLR_ERROR;
 /* Autostart */
 static const char *const autostart[] = {
   "dunst", NULL,
-  "swaybg", "-i", "/home/master/.config/wallpapers/eDP1.jpg",
-    "-m", "fill", NULL,
+  "makewall",  NULL,
   "gentoo-pipewire-launcher", "restart", NULL,
   NULL /* terminate */
 };
