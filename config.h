@@ -168,27 +168,25 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_I,          incnmaster,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
 	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
-	// { MODKEY|WLR_MODIFIER_LOGO,  XKB_KEY_h,          incgaps,       {.i = +1 } },
-	// { MODKEY|WLR_MODIFIER_LOGO,  XKB_KEY_l,          incgaps,       {.i = -1 } },
+	{ MODKEY,                    XKB_KEY_minus,      incgaps,       {.i = -1 } },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_plus,       incgaps,       {.i = +1 } },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_underscore, togglegaps,    {0} },
+	{ MODKEY,                    XKB_KEY_equal,      defaultgaps,   {0} },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_SHIFT,   XKB_KEY_H,      incogaps,      {.i = +1 } },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_SHIFT,   XKB_KEY_L,      incogaps,      {.i = -1 } },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_CTRL,    XKB_KEY_h,      incigaps,      {.i = +1 } },
-	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_CTRL,    XKB_KEY_l,      incigaps,      {.i = -1 } },
-	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_0,          togglegaps,     {0} },
-	{ MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_SHIFT,   XKB_KEY_parenright,defaultgaps,    {0} },
-	{ MODKEY,                    XKB_KEY_y,          incihgaps,     {.i = +1 } },
-	{ MODKEY,                    XKB_KEY_o,          incihgaps,     {.i = -1 } },
-	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_y,          incivgaps,     {.i = +1 } },
-	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_o,          incivgaps,     {.i = -1 } },
-	{ MODKEY|WLR_MODIFIER_LOGO,  XKB_KEY_y,          incohgaps,     {.i = +1 } },
-	{ MODKEY|WLR_MODIFIER_LOGO,  XKB_KEY_o,          incohgaps,     {.i = -1 } },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Y,          incovgaps,     {.i = +1 } },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_O,          incovgaps,     {.i = -1 } },
+	// { MODKEY,                    XKB_KEY_y,          incihgaps,     {.i = +1 } },
+	// { MODKEY,                    XKB_KEY_o,          incihgaps,     {.i = -1 } },
+	// { MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_y,          incivgaps,     {.i = +1 } },
+	// { MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_o,          incivgaps,     {.i = -1 } },
+	// { MODKEY|WLR_MODIFIER_LOGO,  XKB_KEY_y,          incohgaps,     {.i = +1 } },
+	// { MODKEY|WLR_MODIFIER_LOGO,  XKB_KEY_o,          incohgaps,     {.i = -1 } },
+	// { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Y,          incovgaps,     {.i = +1 } },
+	// { MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_O,          incovgaps,     {.i = -1 } },
 	// { MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
-	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
+	// { MODKEY,                    XKB_KEY_Tab,        view,           {0} },
 	{ MODKEY,                    XKB_KEY_q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
-	// { MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
@@ -210,12 +208,34 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
   // Application Launch {{{
 	{ MODKEY,XKB_KEY_e,spawn,SHCMD("kill -46 $(pidof dwmblocks) && killall neomutt || $TERMINAL -e neomutt && kill -46 $(pidof dwmblocks)")},
+	{ MODKEY,XKB_KEY_w,spawn,SHCMD("$BROWSER")},
+	{ MODKEY,XKB_KEY_a,spawn,SHCMD("dropdowntoggle calc tmux-py") },
+	{ MODKEY|WLR_MODIFIER_SHIFT,XKB_KEY_A,spawn,SHCMD("dropdowntoggle shell tmux-shell") },
   // }}}
   // Media Keys {{{
-  { 0,                         XKB_KEY_SunAudioRaiseVolume,  spawn,SHCMD("volumectl 5 +") },
-  { 0,                         XKB_KEY_SunAudioLowerVolume,  spawn,SHCMD("volumectl 5 -") },
-  { 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn,SHCMD("backlightctl -i 5") },
-  { 0,                         XKB_KEY_XF86MonBrightnessDown, spawn,SHCMD("backlightctl -d 5") },
+
+  // Audio
+  { 0,                         XKB_KEY_XF86AudioMute,         spawn,SHCMD("volumectl mute") },
+  { 0,                         XKB_KEY_XF86AudioLowerVolume,  spawn,SHCMD("volumectl 5 -") },
+  { 0,                         XKB_KEY_XF86AudioRaiseVolume,  spawn,SHCMD("volumectl 5 +") },
+  { WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioLowerVolume,  spawn,SHCMD("volumectl 0  ") },
+  { WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioRaiseVolume,  spawn,SHCMD("volumectl 100") },
+
+  // Media Playback
+  { 0,                         XKB_KEY_XF86AudioPrev,         spawn,SHCMD("playerctl prev") },
+  { 0,                         XKB_KEY_XF86AudioNext,         spawn,SHCMD("playerctl next") },
+  { 0,                         XKB_KEY_XF86AudioPlay,         spawn,SHCMD("playerctl play-pause") },
+
+  // Backlight
+  { 0,                         XKB_KEY_XF86MonBrightnessDown, spawn,SHCMD("backlightctl -d 5  ") },
+  { 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn,SHCMD("backlightctl -i 5  ") },
+  { WLR_MODIFIER_SHIFT,        XKB_KEY_XF86MonBrightnessDown, spawn,SHCMD("backlightctl -s 0  ") },
+  { WLR_MODIFIER_SHIFT,        XKB_KEY_XF86MonBrightnessUp,   spawn,SHCMD("backlightctl -s 100") },
+
+  // Networking
+  { 0,                  XKB_KEY_XF86AudioMedia, spawn,SHCMD("killall nmtui || dropdowntoggle network nmtui") },
+  { WLR_MODIFIER_SHIFT, XKB_KEY_XF86AudioMedia, spawn,SHCMD("killall bluetuith || dropdowntoggle bluetooth bluetuith") },
+
   // }}}
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
 
