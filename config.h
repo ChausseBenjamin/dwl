@@ -84,13 +84,16 @@ static const MonitorRule monrules[] = {
 };
 
 /* keyboard */
-static const struct xkb_rule_names xkb_rules = {
-	/* can specify fields: rules, model, layout, variant, options */
-	/* example:
-	.options = "ctrl:nocaps",
-	*/
-	.options = NULL,
-};
+static const struct xkb_rule_names xkb_rules[] = {
+	{
+		.layout = "us"
+		/* .variant = "dvp", */
+		/* .options = "compose:102,numpad:shift3,kpdl:semi,keypad:atm,caps:super" */
+	},
+	{
+		.layout = "ca"
+	},
+ };
 
 static const int repeat_rate = 50;
 static const int repeat_delay = 300;
@@ -172,6 +175,8 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_plus,       incgaps,       {.i = +1 } },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_underscore, togglegaps,    {0} },
 	{ MODKEY,                    XKB_KEY_equal,      defaultgaps,   {0} },
+	{ WLR_MODIFIER_ALT,          XKB_KEY_Return,     incxkbrules,   {0} },
+	// { WLR_MODIFIER_ALT,          XKB_KEY_Return,     incxkbrules,   {.i = +1} },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_SHIFT,   XKB_KEY_H,      incogaps,      {.i = +1 } },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_SHIFT,   XKB_KEY_L,      incogaps,      {.i = -1 } },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_CTRL,    XKB_KEY_h,      incigaps,      {.i = +1 } },

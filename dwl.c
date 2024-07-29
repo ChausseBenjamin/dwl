@@ -378,6 +378,7 @@ static void setup(void);
 static void spawn(const Arg *arg);
 static void startdrag(struct wl_listener *listener, void *data);
 static int status_in(int fd, unsigned int mask, void *data);
+static void incxkbrules(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
@@ -450,6 +451,7 @@ static struct wl_listener lock_listener = {.notify = locksession};
 
 static struct wlr_seat *seat;
 static KeyboardGroup *kb_group;
+static unsigned int kblayout = 0;
 static unsigned int cursor_mode;
 static Client *grabc;
 static Client initial_grabc;
@@ -1065,7 +1067,7 @@ createkeyboardgroup(void)
 
 	/* Prepare an XKB keymap and assign it to the keyboard group. */
 	context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
-	if (!(keymap = xkb_keymap_new_from_names(context, &xkb_rules,
+	if (!(keymap = xkb_keymap_new_from_names(context, &xkb_rules[kblayout],
 				XKB_KEYMAP_COMPILE_NO_FLAGS)))
 		die("failed to compile keymap");
 
@@ -1088,6 +1090,23 @@ createkeyboardgroup(void)
 	 */
 	wlr_seat_set_keyboard(seat, &group->wlr_group->keyboard);
 	return group;
+}
+
+void
+incxkbrules(const Arg *arg)
+{
+	struct xkb_context *context;
+	struct xkb_keymap *keymap;
+  kblayout = (kblayout+1)%LENGTH(xkb_rules);
+
+	context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+	if (!(keymap = xkb_keymap_new_from_names(context, &xkb_rules[kblayout],
+				XKB_KEYMAP_COMPILE_NO_FLAGS)))
+		die("failed to compile keymap");
+
+  wlr_keyboard_set_keymap(&kb_group->wlr_group->keyboard, keymap);
+	xkb_keymap_unref(keymap);
+	xkb_context_unref(context);
 }
 
 void
