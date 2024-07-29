@@ -1101,8 +1101,9 @@ incxkbrules(const Arg *arg)
 
 	context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 	if (!(keymap = xkb_keymap_new_from_names(context, &xkb_rules[kblayout],
-				XKB_KEYMAP_COMPILE_NO_FLAGS)))
+				XKB_KEYMAP_COMPILE_NO_FLAGS))) {
 		die("failed to compile keymap");
+  }
 
   wlr_keyboard_set_keymap(&kb_group->wlr_group->keyboard, keymap);
 	xkb_keymap_unref(keymap);
