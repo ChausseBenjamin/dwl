@@ -3,4 +3,7 @@ dwl
 *-protocol.c
 *-protocol.h
 .ccls-cache
+*.patch
 # config.h
+
+.cache/
