@@ -159,6 +159,7 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_underscore, togglegaps,    {0} },
 	{ MODKEY,                    XKB_KEY_equal,      defaultgaps,   {0} },
 	{ WLR_MODIFIER_ALT,          XKB_KEY_Return,     incxkbrules,   {0} },
+	{ MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
 	// { WLR_MODIFIER_ALT,          XKB_KEY_Return,     incxkbrules,   {.i = +1} },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_SHIFT,   XKB_KEY_H,      incogaps,      {.i = +1 } },
 	// { MODKEY|WLR_MODIFIER_LOGO|WLR_MODIFIER_SHIFT,   XKB_KEY_L,      incogaps,      {.i = -1 } },
