@@ -144,7 +144,7 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-  { MODKEY,                    XKB_KEY_d,          spawn,          SHCMD("exec \"$(tofi-drun)\"") },
+  { MODKEY,                    XKB_KEY_d,          spawn,          SHCMD("exec \"$(tofi-run)\"") },
 	{ MODKEY,                    XKB_KEY_Return,     spawn,          SHCMD("exec foot") },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
