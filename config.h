@@ -196,6 +196,7 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
   // Application Launch {{{
+	{ MODKEY,XKB_KEY_c,spawn,SHCMD("colorpicker")},
 	{ MODKEY,XKB_KEY_e,spawn,SHCMD("kill -46 $(pidof waybar) && killall neomutt || $TERMINAL -e neomutt && kill -46 $(pidof waybar)")},
 	{ MODKEY,XKB_KEY_w,spawn,SHCMD("$BROWSER")},
 	{ MODKEY,XKB_KEY_a,spawn,SHCMD("dropdowntoggle calc tmux-py") },
