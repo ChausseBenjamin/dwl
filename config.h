@@ -16,9 +16,11 @@ static const unsigned int gappov           = 10; /* vert outer gap between windo
 static const float rootcolor[]             = COLOR(0x222222ff); // #222222
 static const float bordercolor[]           = COLOR(0x444444ff); // #444444
 static const float focuscolor[]            = COLOR(0x447a6cff); // #447a6c
-static const float urgentcolor[]           = COLOR(0xff0000ff);
+static const float urgentcolor[]           = COLOR(0x7d4b23ff); // #7d4b23
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
+static const char *cursor_theme            = "Posy_Cursor_Black";
+static const char cursor_size[]            = "24"; /* Make sure it's a valid integer, otherwise things will break */
 
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (9)
@@ -26,15 +28,21 @@ static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You ca
 /* logging */
 static int log_level = WLR_ERROR;
 
+/* helper for spawning shell commands in the pre dwm-5.0 fashion */
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+
 /* Autostart */
 static const char *const autostart[] = {
   "dunst", NULL,
   "gentoo-pipewire-launcher", "restart", NULL,
-  "makewall",  NULL,
+  "proton-mail-bridge", "--noninteractive", NULL,
   "waybar", NULL,
+  "makewall",  NULL,
   NULL /* terminate */
 };
 
+/* on Monitor change triggers */
+static const Arg monchange = SHCMD("makewall");
 
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
@@ -42,7 +50,9 @@ static const Rule rules[] = {
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
 	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,           -1 }, /* Start on ONLY tag "9" */
-	{ "dropdown",         NULL,       0,            1,           -1 },
+	{ "dropdown",         NULL,       ~0,           1,           -1 },
+	{ NULL, "Picture-in-Picture",     ~0,           1,           -1 },
+	{ NULL,               "webcam",   ~0,           1,           -1 },
 };
 
 /* layout(s) */
@@ -65,7 +75,10 @@ static const MonitorRule monrules[] = {
 	{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
 	*/
 	/* defaults */
-	{ NULL,       0.55f, 1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	{ "eDP-1",    0.55f, 1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,    1280,  1080 },
+	// { "eDP-1",    0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,    1280,  1080 },
+	// { "DP-3",     0.55f, 1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,    1280,  0    },
+	{ "DP-3",     0.55f, 1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_180,    0,  1080    },
 };
 
 /* keyboard */
@@ -131,12 +144,9 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 
 #define TAGKEYS(KEY,SKEY,TAG) \
 	{ MODKEY,                    KEY,            view,            {.ui = 1 << TAG} }, \
-	{ WLR_MODIFIER_ALT,          KEY,            toggletag,      {.ui = 1 << TAG} }, \
+	{ WLR_MODIFIER_ALT,          KEY,            toggletag,       {.ui = 1 << TAG} }, \
 	{ MODKEY|WLR_MODIFIER_SHIFT, SKEY,           tag,             {.ui = 1 << TAG} }, \
 	{ MODKEY|WLR_MODIFIER_ALT|WLR_MODIFIER_SHIFT,SKEY,toggleview, {.ui = 1 << TAG} }
-
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
 // static const char *termcmd[] = { "foot", NULL };
@@ -154,8 +164,8 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_I,          incnmaster,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
 	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
-	{ MODKEY,                    XKB_KEY_minus,      incgaps,       {.i = -1 } },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_plus,       incgaps,       {.i = +1 } },
+	{ MODKEY,                    XKB_KEY_minus,      incgaps,       {.i = +1 } },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_plus,       incgaps,       {.i = -1 } },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_underscore, togglegaps,    {0} },
 	{ MODKEY,                    XKB_KEY_equal,      defaultgaps,   {0} },
 	{ WLR_MODIFIER_ALT,          XKB_KEY_Return,     incxkbrules,   {0} },
@@ -206,6 +216,7 @@ static const Key keys[] = {
 
   // Audio
   { 0,                         XKB_KEY_XF86AudioMute,         spawn,SHCMD("volumectl mute") },
+  { WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioMute,         spawn,SHCMD("dropdowntoggle audio pulsemixer") },
   { 0,                         XKB_KEY_XF86AudioLowerVolume,  spawn,SHCMD("volumectl 5 -") },
   { 0,                         XKB_KEY_XF86AudioRaiseVolume,  spawn,SHCMD("volumectl 5 +") },
   { WLR_MODIFIER_SHIFT,        XKB_KEY_XF86AudioLowerVolume,  spawn,SHCMD("volumectl 0  ") },
@@ -225,6 +236,11 @@ static const Key keys[] = {
   // Networking
   { 0,                  XKB_KEY_XF86AudioMedia, spawn,SHCMD("killall nmtui || dropdowntoggle network nmtui") },
   { WLR_MODIFIER_SHIFT, XKB_KEY_XF86AudioMedia, spawn,SHCMD("killall bluetuith || dropdowntoggle bluetooth bluetuith") },
+
+  // Screen captures
+  { 0,                         XKB_KEY_Print,         spawn,SHCMD("capture -f") }, // fullscreen
+  { MODKEY,                    XKB_KEY_Print,         spawn,SHCMD("capture -s") }, // selection
+  { WLR_MODIFIER_SHIFT,        XKB_KEY_Print,         spawn,SHCMD("capture -w") }, // window
 
   // }}}
 	{ MODKEY,                    XKB_KEY_BackSpace,  spawn,          SHCMD("swaylock -uc 000000") },

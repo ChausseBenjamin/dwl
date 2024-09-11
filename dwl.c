@@ -834,6 +834,8 @@ closemon(Monitor *m)
 	}
 	focusclient(focustop(selmon), 1);
 	printstatus();
+
+  spawn(&monchange);
 }
 
 void
@@ -1150,10 +1152,13 @@ createmon(struct wl_listener *listener, void *data)
 	 * output (such as DPI, scale factor, manufacturer, etc).
 	 */
 	m->scene_output = wlr_scene_output_create(scene, wlr_output);
-	if (m->m.x == -1 && m->m.y == -1)
+	if (m->m.x == -1 && m->m.y == -1) {
 		wlr_output_layout_add_auto(output_layout, wlr_output);
-	else
+  } else {
 		wlr_output_layout_add(output_layout, wlr_output, m->m.x, m->m.y);
+  }
+
+  spawn(&monchange);
 }
 
 void
@@ -2850,8 +2855,12 @@ setup(void)
 	 * Xcursor themes to source cursor images from and makes sure that cursor
 	 * images are available at all scale factors on the screen (necessary for
 	 * HiDPI support). Scaled cursors will be loaded with each output. */
-	cursor_mgr = wlr_xcursor_manager_create(NULL, 24);
-	setenv("XCURSOR_SIZE", "24", 1);
+	cursor_mgr = wlr_xcursor_manager_create(cursor_theme, atoi(cursor_size));
+	setenv("XCURSOR_SIZE", cursor_size, 1);
+	if (cursor_theme)
+		setenv("XCURSOR_THEME", cursor_theme, 1);
+	else
+		unsetenv("XCURSOR_THEME");
 
 	/*
 	 * wlr_cursor *only* displays an image on screen. It does not move around
